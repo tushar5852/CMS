@@ -1,0 +1,32 @@
+/* FileUpload.css */
+
+.preview {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: grab;
+    width: 30%;
+  }
+  
+  .file-item:active {
+    cursor: grabbing;
+  }
+  
+  .file-item img,
+  .file-item embed,
+  .file-item video {
+    margin-right: 10px;
+  }
+  
+  .file-item p {
+    margin: 0;
+  }
+  
