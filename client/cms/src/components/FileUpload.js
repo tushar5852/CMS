@@ -5,10 +5,11 @@ import './FileUpload.css';
 export default function FileUpload(){
     const [files, setFiles] = useState([]);
     const [draggingIndex, setDraggingIndex] = useState(null);
+    const [payLoad , setPayload] = useState([])
 
     useEffect(() => {
         // Fetch initial data from the backend
-        axios.get('/api/files')
+        axios.get('http://localhost:5000/api/files')
           .then(response => {
             setFiles(response.data);
           })
@@ -16,6 +17,25 @@ export default function FileUpload(){
             console.error('Error fetching files:', error);
           });
     }, []);
+
+    useEffect(() => {
+        if(payLoad.length > 0) {uploadData()}
+    } , [payLoad])
+
+    const uploadData = async() => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/upload', payLoad, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        console.log('Upload successful:', response.data);
+        } catch (error) {
+          console.error('Error uploading files:', error);
+        }
+    
+    }
 
     const handleFileChange = (event) => {
         const newFiles = Array.from(event.target.files);
@@ -29,23 +49,17 @@ export default function FileUpload(){
         setFiles([...files, ...newFilePreviews]);
     };
 
-    const handleUpload = async () => {
-        const formData = new FormData();
-        files.forEach((fileObj, index) => {
-          formData.append(`files`, fileObj.file);
-        });
+const handleUpload =  () => {
+      // const formData = new FormData();
+
+    files.map((fileObj, index) => {
+      setPayload(prevPayload => [...prevPayload, fileObj?.file]);
+        // formData.append(`file${index}`, fileObj.file);
+    });
+    // console.log("payLoad" , payLoad)
+  }
+
     
-        try {
-          const response = await axios.post('/api/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          console.log(response.data);
-        } catch (error) {
-          console.error('Error uploading files:', error);
-        }
-    };
 
     const handleDragStart = (index) => {
         setDraggingIndex(index);
